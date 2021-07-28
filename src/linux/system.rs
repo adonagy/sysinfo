@@ -135,6 +135,9 @@ impl System {
                     to_delete.push(*pid);
                 } else {
                     compute_cpu_usage(proc_, self.processors.len() as u64, total_time);
+                    for (_, task) in &mut proc_.tasks {
+                        compute_cpu_usage(task, self.processors.len() as u64, total_time)
+                    }
                 }
             }
             for pid in to_delete {
@@ -364,6 +367,9 @@ impl SystemExt for System {
 
             if let Some(p) = self.process_list.tasks.get_mut(&pid) {
                 compute_cpu_usage(p, self.processors.len() as u64, total_time);
+                for (_, task) in &mut p.tasks {
+                    compute_cpu_usage(task, self.processors.len() as u64, total_time)
+                }
             }
         }
         found
